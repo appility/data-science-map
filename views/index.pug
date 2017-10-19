@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  h2 Datamaps
+  p
+  #container1(style="position: relative; width: 80%; height: 500px")
+  button#update Update USA Fill
+  script.
+      var defaultData = {
+      USA: {fillKey: 'lt50' },
+      RUS: {fillKey: 'lt50' },
+      CAN: {fillKey: 'lt50' },
+      BRA: {fillKey: 'gt50' },
+      ARG: {fillKey: 'gt50'},
+      COL: {fillKey: 'gt50' },
+      AUS: {fillKey: 'gt50' },
+      ZAF: {fillKey: 'gt50' },
+      MAD: {fillKey: 'gt50' }
+      };
+      //basic map config with custom fills, mercator projection
+      var map = new Datamap({
+      scope: 'world',
+      element: document.getElementById('container1'),
+      projection: 'mercator',
+      fills: {
+      defaultFill: '#f0af0a',
+      lt50: 'rgba(0,244,244,0.9)',
+      gt50: 'rgba(244,0,0,0.5)'
+      },
+      data: defaultData
+      });
+      d3.select('#update').on('click', function(e) {
+      defaultData.USA.fillKey = 'gt50';
+      defaultData.RUS.color = 'blue';
+      map.updateChoropleth(defaultData);
+      });;
+
