@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "scss": "node-sass --watch assets/sass -o public/css"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,10 @@
     "morgan": "~1.9.0",
     "pug": "^2.0.0-rc.4",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "gulp-browserify": "^0.5.1",
+    "muicss": "^0.9.27",
+    "node-sass": "^4.5.3"
   }
 }

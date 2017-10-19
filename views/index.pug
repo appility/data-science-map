@@ -3,11 +3,15 @@ extends layout
 block content
   h2 Datamaps
   p
-  #container1(style="position: relative; width: 80%; height: 500px")
+  #container1(style="position: relative; width: 80%; height: auto")
   button#update Update USA Fill
   script.
+      var dataset = {};
+      var series = [
+        ["USA",75],["CAN",43],["RUS",50],["AUS",88],["SRB",21],["TLS",43],
+        ["REU",21]];
       var defaultData = {
-      USA: {fillKey: 'lt50' },
+      USA: {fillKey: 'lt50', numberOfThings: 120132 },
       RUS: {fillKey: 'lt50' },
       CAN: {fillKey: 'lt50' },
       BRA: {fillKey: 'gt50' },
@@ -21,17 +25,44 @@ block content
       var map = new Datamap({
       scope: 'world',
       element: document.getElementById('container1'),
+      responsive: true,
       projection: 'mercator',
       fills: {
       defaultFill: '#f0af0a',
       lt50: 'rgba(0,244,244,0.9)',
       gt50: 'rgba(244,0,0,0.5)'
       },
-      data: defaultData
+      geographyConfig: {
+        popupOnHover: true,
+        highlightOnHover: true,
+        borderColor: '#444',
+        borderWidth: 0.5
+      },
+      popupTemplate: function(geo, data) {
+          // don't show tooltip if country don't present in dataset
+          if (!data) { return ; }
+          // tooltip content
+          return ['<div class="hoverinfo">',
+              '<strong>', geo.properties.name, '</strong>',
+              '<br>Count: <strong>', data.numberOfThings, '</strong>',
+              '</div>'].join('')},
+      data: defaultData,
+      done: function(map) {
+        map.svg.selectAll('.datamaps-subunit').on('click', function(geo) {
+          var localData = map.options.data[geo.id]
+          if ( localData && localData.numberOfThings ) {
+            alert(localData.numberOfThings)
+          }
+        })
+      }
       });
       d3.select('#update').on('click', function(e) {
       defaultData.USA.fillKey = 'gt50';
       defaultData.RUS.color = 'blue';
       map.updateChoropleth(defaultData);
       });;
+
+      window.addEventListener('resize', function() {
+        map.resize();
+      });
 
